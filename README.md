@@ -46,7 +46,7 @@ Microsoft Entra ID (Azure Active Directory) and Azure Key Vault ensure secure ac
 This pipeline automates the ingestion, processing, and prediction of traffic accident data. 
 ## Implementation system
 ###### The processing flow of transferring data from API endpoints to Azure Data Lake Storage Gen2
-<img width="897" alt="image" src=".assets/pipeline.png">
+<img width="897" alt="image" src="./assets/pipeline.png">
 
 ###### Process and move data from the Bronze layer to the Silver layer in ADLS2
 <img width="901" alt="image" src="./assets/bronzetosilver.png">
