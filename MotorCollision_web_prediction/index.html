@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Send data to Azure Event Hub</title>
+</head>
+<body>
+    <h1>Nhập dữ liệu để gửi đến Azure Event Hub</h1>
+    <form id="eventHubForm">
+        <!-- Các trường input được cập nhật -->
+        <div class="container">
+            <label for="contributing_factor_vehicle_1" class="label">contributing_factor_vehicle_1</label>
+            <input type="text" name="contributing_factor_vehicle_1" id="contributing_factor_vehicle_1">
+        </div>
+
+        <div class="container">
+            <label for="contributing_factor_vehicle_2" class="label">contributing_factor_vehicle_2</label>
+            <input type="text" name="contributing_factor_vehicle_2" id="contributing_factor_vehicle_2">
+        </div>
+
+        <div class="container">
+            <label for="contributing_factor_vehicle_3" class="label">contributing_factor_vehicle_3</label>
+            <input type="text" name="contributing_factor_vehicle_3" id="contributing_factor_vehicle_3">
+        </div>
+
+        <div class="container">
+            <label for="contributing_factor_vehicle_4" class="label">contributing_factor_vehicle_4</label>
+            <input type="text" name="contributing_factor_vehicle_4" id="contributing_factor_vehicle_4">
+        </div>
+
+        <div class="container">
+            <label for="contributing_factor_vehicle_5" class="label">contributing_factor_vehicle_5</label>
+            <input type="text" name="contributing_factor_vehicle_5" id="contributing_factor_vehicle_5">
+        </div>
+
+        <div class="container">
+            <label for="vehicle_type_code1" class="label">vehicle_type_code1</label>
+            <input type="text" name="vehicle_type_code1" id="vehicle_type_code1">
+        </div>
+
+        <div class="container">
+            <label for="vehicle_type_code2" class="label">vehicle_type_code2</label>
+            <input type="text" name="vehicle_type_code2" id="vehicle_type_code2">
+        </div>
+
+        <div class="container">
+            <label for="borough" class="label">borough</label>
+            <select name="borough" id="borough">
+                <option value="Bronx">BRONX</option>
+                <option value="Brooklyn">BROOKLYN</option>
+                <option value="Manhattan">MANHATTAN</option>
+                <option value="Queens">QUEENS</option>
+                <option value="Staten Island">STATEN ISLAND</option>
+            </select>
+        </div>
+
+        <!-- <div class="container">
+            <label for="is_injured" class="label">is_injured</label>
+            <input type="text" name="is_injured" id="is_injured">
+        </div> -->
+
+        <input type="submit" name="submit" value="Send data" id="Submit">
+
+        <div class="container">
+            <label for="predict" class="label">Kết quả dự đoán</label>
+            <input type="Text" name="predict" id="predict">
+        </div>
+    </form>
+
+    <script>
+        document.getElementById("eventHubForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+    
+            const data = {
+                contributing_factor_vehicle_1: document.getElementById("contributing_factor_vehicle_1").value,
+                contributing_factor_vehicle_2: document.getElementById("contributing_factor_vehicle_2").value,
+                contributing_factor_vehicle_3: document.getElementById("contributing_factor_vehicle_3").value,
+                contributing_factor_vehicle_4: document.getElementById("contributing_factor_vehicle_4").value,
+                contributing_factor_vehicle_5: document.getElementById("contributing_factor_vehicle_5").value,
+                vehicle_type_code1: document.getElementById("vehicle_type_code1").value,
+                vehicle_type_code2: document.getElementById("vehicle_type_code2").value,
+                borough: document.getElementById("borough").value,
+            };
+    
+            const submitButton = document.getElementById("Submit");
+            const predictField = document.getElementById("predict");
+            submitButton.disabled = true;
+            submitButton.value = "Đang gửi...";
+            predictField.value = "";
+    
+            try {
+                // Gửi request đến API /send-to-event-hub
+                const eventHubResponse = await fetch("http://localhost:3000/send-to-event-hub", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                });
+    
+                if (eventHubResponse.ok) {
+                    alert("Dữ liệu đã được gửi đến Event Hub thành công!");
+    
+                    // Gửi request đến API /predict
+                    const predictResponse = await fetch("http://localhost:3000/predict", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(data),
+                    });
+    
+                    if (predictResponse.ok) {
+                        const result = await predictResponse.json();
+                        console.log(result['predictions'][0])
+                        const prediction = result['predictions'][0] === 1 ? "Có người bị thương" : "Không có ai bị thương";
+                        predictField.value = prediction;
+                    } else {
+                        const error = await predictResponse.json();
+                        console.error("Error from predict API:", error);
+                        alert("Dự đoán thất bại.");
+                    }
+                } else {
+                    const error = await eventHubResponse.json();
+                    console.error("Error from Event Hub API:", error);
+                    alert("Có lỗi xảy ra khi gửi dữ liệu đến Event Hub.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Có lỗi xảy ra khi xử lý yêu cầu.");
+            } finally {
+                submitButton.disabled = false;
+                submitButton.value = "Send data";
+            }
+        });
+    </script>
+    
+</body>
+</html>
