@@ -6,7 +6,7 @@ The government of New York State collects information about traffic accidents oc
 
 To address this issue, a robust, flexible, and automated data processing system is required to collect, standardize, and analyze data from multiple sources, with the goal of implementing measures to reduce traffic accidents.
 ## Data Flow Diagram
-![flow drawio](D:\cloud\Azure-ELT-for-Crashes-prediction\assets\flow.png)
+<img width="794" alt="image" src="./assets/flow.png">
 
 Below is the explanation of the process:
 1. Data Source:
@@ -46,19 +46,19 @@ Microsoft Entra ID (Azure Active Directory) and Azure Key Vault ensure secure ac
 This pipeline automates the ingestion, processing, and prediction of traffic accident data. 
 ## Implementation system
 ###### The processing flow of transferring data from API endpoints to Azure Data Lake Storage Gen2
-<img width="897" alt="image" src="D:\cloud\Azure-ELT-for-Crashes-prediction\assets\pipeline.png">
+<img width="897" alt="image" src=".assets/pipeline.png">
 
 ###### Process and move data from the Bronze layer to the Silver layer in ADLS2
-<img width="901" alt="image" src="D:\cloud\Azure-ELT-for-Crashes-prediction\assets\bronzetosilver.png">
+<img width="901" alt="image" src="./assets/bronzetosilver.png">
 
 ###### Process and move data from the Silver layer to the Gold layer in ADLS2
-<img width="903" alt="image" src="D:\cloud\Azure-ELT-for-Crashes-prediction\assets\silvertogold.png">
+<img width="903" alt="image" src="./assets/silvertogold.png">
 
 ###### Create a pipeline from notebooks in Azure Data Factory
-<img width="636" alt="image" src="D:\cloud\Azure-ELT-for-Crashes-prediction\assets\pipeline2.png">
+<img width="636" alt="image" src="./assets/pipeline2.png">
 
 ###### Develop a web page using the model's API: send requests to the cloud system, receive responses, and parse the results
-<img width="794" alt="image" src="D:\cloud\Azure-ELT-for-Crashes-prediction\assets\demo.png">
+<img width="794" alt="image" src="./assets/demo.png">
 
 ## Technologies used: 
 Azure Technologies used: Azure Data Factory, Azure Data Lake Storage Gen 2, Azure Databricks, Azure Databricks, Azure Event Hub, Microsoft Entra ID, Azure Key Vault
